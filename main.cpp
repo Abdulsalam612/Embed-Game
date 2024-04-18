@@ -42,8 +42,7 @@ int main() {
 
     
     while (true) {
-        tft.fillRect(20, 20+50, 1000, 1000, ST7735_BLACK);
- 
+
         lcd.clear();
         lcd.drawRect(0,0,84,48,FILL_TRANSPARENT);   //draws screen boarder
         lcd.drawRect(x_pos,y_pos,2,2,FILL_BLACK);   //draws point at position (x,y)
