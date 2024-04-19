@@ -7,7 +7,8 @@ GameEngine::GameEngine()
       joystick2(PC_2, PC_3),
       button1(PB_0),
       button2(PA_8),
-      y_pos(24), x_pos(42), y_pos2(15), x_pos2(20)
+      y_pos(24), x_pos(42), y_pos2(15), x_pos2(20),
+      groundLevel(45), velocity_y(0.0), gravity(0.5), buttonReleased(true)
 {
 }
 
@@ -27,10 +28,32 @@ void GameEngine::init() {
 void GameEngine::run() {
     init();
 
+    const float jumpHeight = 5; // How high the character jumps
+    bool isJumping = false;
+    float jumpPeak = y_pos - jumpHeight; // Highest point of the jump
+
     while (true) {
         refreshDisplay();
         updateCharacterPosition(joystick1);
         updateShootingDirection(joystick2);
+
+        // Handle jumping logic
+        if (button1 == 0 && buttonReleased) {
+            velocity_y = -5; // Start jump with initial upward velocity
+            buttonReleased = false;
+        } else if (button1 != 0) {
+            buttonReleased = true; // Button released, ready for next jump
+        }
+
+        // Apply gravity
+        velocity_y += gravity;
+        y_pos += velocity_y;
+        y_pos = std::min(y_pos, groundLevel);
+
+        if (y_pos >= groundLevel) {
+            y_pos = groundLevel; // Ensure character is on the ground
+            velocity_y = 0; // Stop moving when on ground
+        }
 
         boundary(x_pos, y_pos);
         boundary(x_pos2, y_pos2);
@@ -90,22 +113,14 @@ void GameEngine::updateShootingDirection(Joystick& joystick) {
     }
 }
 
-void GameEngine::boundary(int x, int y) {
-    if (x < 1 ){        //ensure that the point doesnt pass beyond the left hand side of the screen
-        x_pos = 1;
-        x_pos2 = 1;
-    }else if (x > 81){  //ensure that the point doesnt pass beyond the right hand side of the screen-
-        x_pos = 81;
-        x_pos2 = 81;
-    }
+void GameEngine::boundary(float& x, float& y) {
+    // Handle horizontal boundaries
+    if (x < 1) x = 1;  // Left boundary
+    else if (x > 81) x = 81;  // Right boundary
 
-    if(y < 1){          //ensure that the point doesnt pass beyond the top of the screen
-        y_pos = 1;
-        y_pos2 = 1;
-    }else if(y > 45){   //ensure that the point doesnt pass beyond the bottom of the screen
-        y_pos = 45;
-        y_pos2 = 45;
-    }
+    // Handle vertical boundaries
+    if (y < 1) y = 1;  // Top boundary
+    else if (y > groundLevel) y = groundLevel;  // Bottom boundary (ground level)
 }
 
 void GameEngine::refreshDisplay() {

@@ -8,6 +8,8 @@
 #include "Adafruit_ST7735.h"
 #include "N5110.h"
 
+#include "Character.h" // Include the Character header
+
 class GameEngine {
 public:
     GameEngine();
@@ -16,7 +18,7 @@ public:
 private:
     void updateCharacterPosition(Joystick& joystick);
     void updateShootingDirection(Joystick& joystick);
-    void boundary(int x, int y);
+    void boundary(float& x, float& y);
     void init();
     void refreshDisplay();
 
@@ -28,11 +30,11 @@ private:
     DigitalIn button1;
     DigitalIn button2;
 
-    // Game state
-    float y_pos;
-    float x_pos;
-    float y_pos2;
-    float x_pos2;
+     // Game state
+    float y_pos, x_pos, y_pos2, x_pos2;
+    float groundLevel;
+    float velocity_y, gravity;
+    bool buttonReleased; // To manage jump button state
 };
 
 #endif
