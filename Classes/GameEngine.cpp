@@ -2,7 +2,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Adafruit_ST7735& tft, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd), tft(tft), joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      y_pos(24), x_pos(42), y_pos2(15), x_pos2(20), groundLevel(45), velocity_y(0.0), gravity(0.5), buttonReleased(true)
+      y_pos(24), x_pos(42), y_pos2(15), x_pos2(20), groundLevel(40), velocity_y(0.0), gravity(0.5), buttonReleased(true)
 {
 }
 
@@ -88,22 +88,51 @@ void GameEngine::updateCharacterPosition(Joystick& joystick) {
 }
 
 void GameEngine::updateShootingDirection(Joystick& joystick) {
-    // Get direction from joystick
     float dx = 0, dy = 0;
     Direction dir = joystick.get_direction();
-    if (dir == N) dy = -1;
-    else if (dir == S) dy = 1;
-    else if (dir == E) dx = 1;
-    else if (dir == W) dx = -1;
-    else if (dir == NE) { dx = 1; dy = -1; }
-    else if (dir == NW) { dx = -1; dy = -1; }
-    else if (dir == SE) { dx = 1; dy = 1; }
-    else if (dir == SW) { dx = -1; dy = 1; }
 
-    // Create a projectile at character's position with the direction of the joystick
-    projectiles.push_back(Projectile(x_pos, y_pos, dx, dy));
+    // Define the starting point for projectiles
+    float startX = x_pos + 2;  // Horizontal center of the character
+    float startY = y_pos + 3.5;  // Vertical center of the character
+
+    // Adjust start position based on the direction
+    if (dir == N) {
+        dy = -1;
+        startY = y_pos;  // Start at the top of the character
+    } else if (dir == S) {
+        dy = 1;
+        startY = y_pos + 7;  // Start at the bottom of the character
+    } else if (dir == E) {
+        dx = 1;
+        startX = x_pos + 4;  // Start at the right side of the character
+    } else if (dir == W) {
+        dx = -1;
+        startX = x_pos;  // Start at the left side of the character
+    } else if (dir == NE) {
+        dx = 1;
+        dy = -1;
+        startX = x_pos + 4;  // Start at the top-right corner
+        startY = y_pos;
+    } else if (dir == NW) {
+        dx = -1;
+        dy = -1;
+        startX = x_pos;  // Start at the top-left corner
+        startY = y_pos;
+    } else if (dir == SE) {
+        dx = 1;
+        dy = 1;
+        startX = x_pos + 4;  // Start at the bottom-right corner
+        startY = y_pos + 7;
+    } else if (dir == SW) {
+        dx = -1;
+        dy = 1;
+        startX = x_pos;  // Start at the bottom-left corner
+        startY = y_pos + 7;
+    }
+
+    // Create a projectile at the adjusted starting position with the direction of the joystick
+    projectiles.push_back(Projectile(startX, startY, dx, dy));
 }
-
 void GameEngine::handleProjectiles() {
     for (auto& p : projectiles) {
         p.update();
@@ -124,5 +153,5 @@ void GameEngine::boundary(float& x, float& y) {
 void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);
-    lcd.drawRect(x_pos, y_pos, 2, 2, FILL_BLACK);
+    lcd.drawRect(x_pos, y_pos, 4, 7, FILL_BLACK);
 }
