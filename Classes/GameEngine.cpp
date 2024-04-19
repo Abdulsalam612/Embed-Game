@@ -1,14 +1,8 @@
 #include "GameEngine.h"
 
-GameEngine::GameEngine()
-    : lcd(PC_7, PA_9, PB_10, PB_5, PB_3, PA_10),
-      tft(PA_7, PA_6, PA_5, PB_6, PC_10, PA_3),
-      joystick1(PC_1, PC_0),
-      joystick2(PC_2, PC_3),
-      button1(PB_0),
-      button2(PA_8),
-      y_pos(24), x_pos(42), y_pos2(15), x_pos2(20),
-      groundLevel(45), velocity_y(0.0), gravity(0.5), buttonReleased(true)
+GameEngine::GameEngine(N5110& lcd, Adafruit_ST7735& tft, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
+    : lcd(lcd), tft(tft), joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
+      y_pos(24), x_pos(42), y_pos2(15), x_pos2(20), groundLevel(45), velocity_y(0.0), gravity(0.5), buttonReleased(true)
 {
 }
 
