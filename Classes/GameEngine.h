@@ -4,6 +4,10 @@
 #include "mbed.h"
 #include "Joystick.h"
 #include "Bitmap.h"
+
+#include "Projectile.h"
+#include <vector>  // For managing a list of projectiles
+
 #include "Adafruit_ST7735.h"
 #include "N5110.h"
 
@@ -18,6 +22,7 @@ private:
     void boundary(float& x, float& y);
     void init();
     void refreshDisplay();
+    void handleProjectiles();
 
     // Hardware components
     N5110& lcd;
@@ -28,6 +33,7 @@ private:
     DigitalIn& button2;
 
     // Game state
+    std::vector<Projectile> projectiles;
     float y_pos, x_pos, y_pos2, x_pos2;
     float groundLevel, velocity_y, gravity;
     bool buttonReleased; // To manage jump button state

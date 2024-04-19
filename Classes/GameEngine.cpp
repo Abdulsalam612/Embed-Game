@@ -29,7 +29,12 @@ void GameEngine::run() {
     while (true) {
         refreshDisplay();
         updateCharacterPosition(joystick1);
-        updateShootingDirection(joystick2);
+
+        if (button2 == 1) {  // Assuming button2 is active low
+            updateShootingDirection(joystick2);
+        }
+
+        handleProjectiles();
 
         // Handle jumping logic
         if (button1 == 0 && buttonReleased) {
@@ -83,27 +88,26 @@ void GameEngine::updateCharacterPosition(Joystick& joystick) {
 }
 
 void GameEngine::updateShootingDirection(Joystick& joystick) {
+    // Get direction from joystick
+    float dx = 0, dy = 0;
     Direction dir = joystick.get_direction();
-    if (dir == N) {
-        y_pos2--;
-    } else if (dir == S) {
-        y_pos2++;
-    } else if (dir == E) {
-        x_pos2++;
-    } else if (dir == W) {
-        x_pos2--;
-    } else if (dir == NE) {
-        y_pos2--;
-        x_pos2++;
-    } else if (dir == NW) {
-        y_pos2--;
-        x_pos2--;
-    } else if (dir == SE) {
-        y_pos2++;
-        x_pos2++;
-    } else if (dir == SW) {
-        y_pos2++;
-        x_pos2--;
+    if (dir == N) dy = -1;
+    else if (dir == S) dy = 1;
+    else if (dir == E) dx = 1;
+    else if (dir == W) dx = -1;
+    else if (dir == NE) { dx = 1; dy = -1; }
+    else if (dir == NW) { dx = -1; dy = -1; }
+    else if (dir == SE) { dx = 1; dy = 1; }
+    else if (dir == SW) { dx = -1; dy = 1; }
+
+    // Create a projectile at character's position with the direction of the joystick
+    projectiles.push_back(Projectile(x_pos, y_pos, dx, dy));
+}
+
+void GameEngine::handleProjectiles() {
+    for (auto& p : projectiles) {
+        p.update();
+        lcd.setPixel(round(p.x), round(p.y), 1); // Example method, adjust to your LCD's API
     }
 }
 
@@ -121,5 +125,4 @@ void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);
     lcd.drawRect(x_pos, y_pos, 2, 2, FILL_BLACK);
-    lcd.drawCircle(x_pos2, y_pos2, 3, FILL_BLACK);
 }
