@@ -20,6 +20,6 @@ DigitalIn button2(PA_8);
 
 int main() {
     GameEngine game(lcd, tft, joystick1, joystick2, button1, button2);
-    game.run();
+    game.run(); 
     return 0;
 }

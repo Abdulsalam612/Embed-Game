@@ -1,4 +1,6 @@
 #include "GameEngine.h"
+#include "Bitmap.h"
+#include "test.h"
 
 GameEngine::GameEngine(N5110& lcd, Adafruit_ST7735& tft, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd), tft(tft), joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
