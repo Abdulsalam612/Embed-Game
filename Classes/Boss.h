@@ -11,6 +11,7 @@ public:
     void draw();
     void takeDamage();
     bool isDead();
+    void setDead(bool value);
 
     float x_pos, y_pos;
     int hp;
@@ -21,6 +22,7 @@ private:
     int width;
     int height;
     int direction;
+    bool dead;
 };
 
 #endif

@@ -27,7 +27,10 @@ void GameEngine::run() {
         }
         handleProjectiles();
         handleBossCollision();
-        boss.update();
+        if (!boss.isDead()) {
+            boss.update();
+            boss.draw();
+        }
         character.applyGravity();
         character.jump(button1 == 0);
         character.boundaryCheck();
@@ -48,12 +51,10 @@ void GameEngine::handleBossCollision() {
         if (p.x >= boss.x_pos && p.x <= boss.x_pos + 10 && p.y >= boss.y_pos && p.y <= boss.y_pos + 10) {
             boss.takeDamage();
             p.x = -10; // Move the projectile off-screen
+            if (boss.hp <= 0) {
+                boss.setDead(true);
+            }
         }
-    }
-    if (boss.isDead()) {
-        // Handle level completion or boss defeat
-        // Example: Reset boss and move to the next level
-        boss = Boss(&lcd, 42, 5, 10, 2);
     }
 }
 
