@@ -23,6 +23,7 @@ private:
     void refreshDisplay();
     void handleProjectiles();
     void handleBossCollision();
+    void printBossHp();
 
     // Hardware components
     N5110& lcd;

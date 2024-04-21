@@ -4,7 +4,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 40), boss(&lcd, 42, 5, 10, 2) // Example initial positions, ground level, and boss parameters
+      character(42, 24, 40), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
 {
 }
 
@@ -25,6 +25,7 @@ void GameEngine::run() {
         if (button2 == 1) { // Assuming button2 is active low
             character.updateShootingDirection(joystick2, projectiles);
         }
+        printBossHp();
         handleProjectiles();
         handleBossCollision();
         if (!boss.isDead()) {
@@ -44,6 +45,10 @@ void GameEngine::handleProjectiles() {
         p.update();
         lcd.setPixel(round(p.x), round(p.y), 1); // Example method, adjust to your LCD's API
     }
+}
+
+void GameEngine::printBossHp() {
+    printf("Boss HP: %d\n", boss.getHp());
 }
 
 void GameEngine::handleBossCollision() {

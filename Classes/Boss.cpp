@@ -14,6 +14,10 @@ void Boss::update() {
     }
 }
 
+int Boss::getHp() const {
+    return hp;
+}
+
 void Boss::draw() {
     if (!dead) {
         lcd->drawRect(x_pos, y_pos, width, height, FILL_BLACK);

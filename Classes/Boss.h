@@ -16,6 +16,7 @@ public:
     float x_pos, y_pos;
     int hp;
     int damage;
+    int getHp() const;
 
 private:
     N5110* lcd;
