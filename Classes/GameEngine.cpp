@@ -1,10 +1,12 @@
 #include "GameEngine.h"
 #include "Bitmap.h"
 #include "test.h"
+#include "walk1.h"
+#include "walk2.h"
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 40), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
+      character(42, 24, 35), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
 {
 }
 
@@ -66,6 +68,10 @@ void GameEngine::handleBossCollision() {
 void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);
-    lcd.drawRect(character.x_pos, character.y_pos, 4, 7, FILL_BLACK);
+    if (character.currentSprite == 0) {
+        lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk1);
+    } else {
+        lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk2);
+    }
     boss.draw();
 }

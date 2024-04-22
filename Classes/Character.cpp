@@ -2,30 +2,48 @@
 #include "mbed.h" // Include if not already included elsewhere in your project
 
 Character::Character(float initialX, float initialY, float groundLvl)
-: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.5), buttonReleased(true) {}
+: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.5), buttonReleased(true), currentSprite(0), frameCount(0) {}
 
 void Character::updatePosition(Joystick& joystick) {
     Direction dir = joystick.get_direction();
+    bool moved = false;
+
     if (dir == N) {
         y_pos--;
+        moved = true;
     } else if (dir == S) {
         y_pos++;
+        moved = true;
     } else if (dir == E) {
         x_pos++;
+        moved = true;
     } else if (dir == W) {
         x_pos--;
+        moved = true;
     } else if (dir == NE) {
         y_pos--;
         x_pos++;
+        moved = true;
     } else if (dir == NW) {
         y_pos--;
         x_pos--;
+        moved = true;
     } else if (dir == SE) {
         y_pos++;
         x_pos++;
+        moved = true;
     } else if (dir == SW) {
         y_pos++;
         x_pos--;
+        moved = true;
+    }
+
+    if (moved) {
+        frameCount++;
+        if (frameCount >= 6) {  // Change sprite every 10 frames
+            currentSprite = !currentSprite;
+            frameCount = 0;
+        }
     }
 }
 

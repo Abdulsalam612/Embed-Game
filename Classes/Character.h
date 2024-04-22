@@ -18,6 +18,8 @@ public:
     float x_pos, y_pos;
     float velocity_y;
     bool buttonReleased;
+    int currentSprite;
+    int frameCount;
 
 private:
     float groundLevel;
