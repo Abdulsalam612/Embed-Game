@@ -1,8 +1,8 @@
 #include "Character.h"
 #include "mbed.h" // Include if not already included elsewhere in your project
 
-Character::Character(float initialX, float initialY, float groundLvl)
-: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.5), buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0) {}
+Character::Character(float initialX, float initialY, float groundLvl, int initialHp)
+: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.5), buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0), hp(initialHp) {}
 
 void Character::updatePosition(Joystick& joystick) {
     Direction dir = joystick.get_direction();
@@ -115,4 +115,15 @@ void Character::boundaryCheck() {
 
     if (y_pos < 1) y_pos = 1;
     else if (y_pos > groundLevel) y_pos = groundLevel;
+}
+
+void Character::takeDamage(int damage) {
+    hp -= damage;
+    if (hp < 0) {
+        hp = 0;
+    }
+}
+
+bool Character::isDead() const {
+    return hp <= 0;
 }

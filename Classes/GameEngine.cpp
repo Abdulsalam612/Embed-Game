@@ -12,7 +12,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 34), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
+      character(42, 24, 34,1), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
 {
 }
 
@@ -30,7 +30,7 @@ void GameEngine::run() {
     while (true) {
         refreshDisplay();
         character.updatePosition(joystick1);
-        if (button2 == 1) { // Assuming button2 is active low
+        if (button2 == 1) {
             character.updateShootingDirection(joystick2, projectiles);
         }
         printBossHp();
@@ -45,9 +45,15 @@ void GameEngine::run() {
         character.boundaryCheck();
         lcd.refresh();
         ThisThread::sleep_for(30ms);
+
+        if (character.isDead()) {
+            lcd.clear();
+            lcd.printString("Game Over", 0, 0);
+            lcd.refresh();
+            break;
+        }
     }
 }
-
 void GameEngine::handleProjectiles() {
     for (auto& p : projectiles) {
         p.update();
@@ -68,6 +74,12 @@ void GameEngine::handleBossCollision() {
                 boss.setDead(true);
             }
         }
+    }
+
+    if (!character.isDead() && !boss.isDead() &&
+        character.x_pos >= boss.x_pos && character.x_pos <= boss.x_pos + 10 &&
+        character.y_pos >= boss.y_pos && character.y_pos <= boss.y_pos + 10) {
+        character.takeDamage(boss.damage);
     }
 }
 
