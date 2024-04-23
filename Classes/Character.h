@@ -20,6 +20,7 @@ public:
     bool buttonReleased;
     int currentSprite;
     int frameCount;
+    int idleFrame;
 
 private:
     float groundLevel;

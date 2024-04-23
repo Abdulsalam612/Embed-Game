@@ -1,12 +1,18 @@
 #include "GameEngine.h"
 #include "Bitmap.h"
 #include "test.h"
-#include "walk1.h"
-#include "walk2.h"
+#include "walk1_left.h"
+#include "walk2_left.h"
+#include "walk1_right.h"
+#include "walk2_right.h"
+#include "idle1.h"
+#include "idle2.h"
+
+
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 35), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
+      character(42, 24, 34), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
 {
 }
 
@@ -68,10 +74,36 @@ void GameEngine::handleBossCollision() {
 void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);
-    if (character.currentSprite == 0) {
-        lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk1);
+    
+    Direction dir = joystick1.get_direction();
+    
+    if (dir == E) {
+        if (character.currentSprite == 0) {
+            lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk1_right);
+        } else {
+            lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk2_right);
+        }
+    } else if (dir == W) {
+        if (character.currentSprite == 0) {
+            lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk1_left);
+        } else {
+            lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk2_left);
+        }
     } else {
-        lcd.drawSprite(character.x_pos, character.y_pos, 17, 13, (int *)walk2);
+        if (character.idleFrame == 0) {
+            lcd.drawSprite(character.x_pos, character.y_pos, 17, 11, (int *)idle1);
+        } else {
+            lcd.drawSprite(character.x_pos, character.y_pos, 17, 11, (int *)idle2);
+        }
+        
+        // Update the idle frame every 10 game loops
+        static int idleFrameCount = 0;
+        idleFrameCount++;
+        if (idleFrameCount >= 10) {
+            character.idleFrame = !character.idleFrame;
+            idleFrameCount = 0;
+        }
     }
+    
     boss.draw();
 }
