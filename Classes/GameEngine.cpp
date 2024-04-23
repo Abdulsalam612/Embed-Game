@@ -7,13 +7,13 @@
 #include "walk2_right.h"
 #include "idle1.h"
 #include "idle2.h"
-#include "boss1.h"
+#include "boss.h"
 
 
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 34,1), boss(&lcd, 42, 14, 8, 1) // Example initial positions, ground level, and boss parameters
+      character(42, 24, 34,100), Enemy(&lcd, 42, 14, 8, 1) // Example initial positions, ground level, and Enemy parameters
 {
 }
 
@@ -34,12 +34,12 @@ void GameEngine::run() {
         if (button2 == 1) {
             character.updateShootingDirection(joystick2, projectiles);
         }
-        printBossHp();
+        printEnemyHp();
         handleProjectiles();
-        handleBossCollision();
-        if (!boss.isDead()) {
-            boss.update();
-            boss.draw();
+        handleEnemyCollision();
+        if (!Enemy.isDead()) {
+            Enemy.update();
+            Enemy.draw();
         }
         character.applyGravity();
         character.jump(button1 == 0);
@@ -62,28 +62,28 @@ void GameEngine::handleProjectiles() {
     }
 }
 
-void GameEngine::printBossHp() {
-    printf("Boss HP: %d\n", boss.getHp());
+void GameEngine::printEnemyHp() {
+    printf("Enemy HP: %d\n", Enemy.getHp());
 }
 
-void GameEngine::handleBossCollision() {
+void GameEngine::handleEnemyCollision() {
     for (auto& p : projectiles) {
-        if (p.x >= boss.x_pos && p.x <= boss.x_pos + boss1_width && p.y >= boss.y_pos && p.y <= boss.y_pos + boss1_height) {
-            boss.takeDamage();
+        if (p.x >= Enemy.x_pos && p.x <= Enemy.x_pos + boss_width && p.y >= Enemy.y_pos && p.y <= Enemy.y_pos + boss_height) {
+            Enemy.takeDamage();
             p.x = -10; // Move the projectile off-screen
-            if (boss.hp <= 0) {
-                boss.setDead(true);
+            if (Enemy.hp <= 0) {
+                Enemy.setDead(true);
             }
         }
     }
 
-    if (!character.isDead() && !boss.isDead()) {
-        // Check for collision between character and boss sprite
-        if (character.x_pos < boss.x_pos + boss1_width &&
-            character.x_pos + 17 > boss.x_pos &&
-            character.y_pos < boss.y_pos + boss1_height &&
-            character.y_pos + 13 > boss.y_pos) {
-            character.takeDamage(boss.damage);
+    if (!character.isDead() && !Enemy.isDead()) {
+        // Check for collision between character and Enemy sprite
+        if (character.x_pos < Enemy.x_pos + boss_width &&
+            character.x_pos + 17 > Enemy.x_pos &&
+            character.y_pos < Enemy.y_pos + boss_height &&
+            character.y_pos + 13 > Enemy.y_pos) {
+            character.takeDamage(Enemy.damage);
         }
     }
 }
@@ -122,5 +122,5 @@ void GameEngine::refreshDisplay() {
         }
     }
     
-    boss.draw();
+    Enemy.draw();
 }

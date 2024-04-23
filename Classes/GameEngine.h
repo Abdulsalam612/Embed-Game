@@ -2,7 +2,7 @@
 #define GAMEENGINE_H
 
 #include "mbed.h"
-#include "Boss.h"
+#include "Enemy.h"
 #include "Joystick.h"
 #include "Bitmap.h"
 #include "Projectile.h"
@@ -22,8 +22,8 @@ private:
     void init();
     void refreshDisplay();
     void handleProjectiles();
-    void handleBossCollision();
-    void printBossHp();
+    void handleEnemyCollision();
+    void printEnemyHp();
 
     // Hardware components
     N5110& lcd;
@@ -35,7 +35,7 @@ private:
     // Game entities
     Character character;
     std::vector<Projectile> projectiles;
-    Boss boss;
+    Enemy Enemy;
 };
 
 #endif

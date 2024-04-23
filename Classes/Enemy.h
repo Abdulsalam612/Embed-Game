@@ -1,12 +1,12 @@
-#ifndef BOSS_H
-#define BOSS_H
+#ifndef Enemy_H
+#define Enemy_H
 
 #include "mbed.h"
 #include "N5110.h"
 
-class Boss {
+class Enemy {
 public:
-    Boss(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage);
+    Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage);
     void update();
     void draw();
     void takeDamage();

@@ -1,11 +1,11 @@
-#include "Boss.h"
-#include "boss1.h"
+#include "Enemy.h"
+#include "boss.h"
 
-Boss::Boss(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage)
+Enemy::Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage)
     : lcd(lcd), x_pos(initialX), y_pos(initialY), hp(initialHp), damage(initialDamage),
       width(10), height(10), direction(1), dead(false) {}
 
-void Boss::update() {
+void Enemy::update() {
     if (!dead) {
         x_pos += direction;
 
@@ -15,24 +15,24 @@ void Boss::update() {
     }
 }
 
-int Boss::getHp() const {
+int Enemy::getHp() const {
     return hp;
 }
 
-void Boss::draw() {
+void Enemy::draw() {
     if (!dead) {
-        lcd->drawSprite(x_pos, y_pos, boss1_width, boss1_height, (int *)boss1);
+        lcd->drawSprite(x_pos, y_pos, boss_width, boss_height, (int *)boss);
     }
 }
 
-void Boss::takeDamage() {
+void Enemy::takeDamage() {
     hp--;
 }
 
-bool Boss::isDead() {
+bool Enemy::isDead() {
     return dead;
 }
 
-void Boss::setDead(bool value) {
+void Enemy::setDead(bool value) {
     dead = value;
 }
