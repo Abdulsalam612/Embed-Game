@@ -7,12 +7,13 @@
 #include "walk2_right.h"
 #include "idle1.h"
 #include "idle2.h"
+#include "boss1.h"
 
 
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 34,1), boss(&lcd, 42, 5, 8, 1) // Example initial positions, ground level, and boss parameters
+      character(42, 24, 34,1), boss(&lcd, 42, 14, 8, 1) // Example initial positions, ground level, and boss parameters
 {
 }
 
@@ -67,7 +68,7 @@ void GameEngine::printBossHp() {
 
 void GameEngine::handleBossCollision() {
     for (auto& p : projectiles) {
-        if (p.x >= boss.x_pos && p.x <= boss.x_pos + 10 && p.y >= boss.y_pos && p.y <= boss.y_pos + 10) {
+        if (p.x >= boss.x_pos && p.x <= boss.x_pos + boss1_width && p.y >= boss.y_pos && p.y <= boss.y_pos + boss1_height) {
             boss.takeDamage();
             p.x = -10; // Move the projectile off-screen
             if (boss.hp <= 0) {
@@ -76,13 +77,17 @@ void GameEngine::handleBossCollision() {
         }
     }
 
-    if (!character.isDead() && !boss.isDead() &&
-        character.x_pos >= boss.x_pos && character.x_pos <= boss.x_pos + 10 &&
-        character.y_pos >= boss.y_pos && character.y_pos <= boss.y_pos + 10) {
-        character.takeDamage(boss.damage);
+    if (!character.isDead() && !boss.isDead()) {
+        // Check for collision between character and boss sprite
+        if (character.x_pos < boss.x_pos + boss1_width &&
+            character.x_pos + 17 > boss.x_pos &&
+            character.y_pos < boss.y_pos + boss1_height &&
+            character.y_pos + 13 > boss.y_pos) {
+            character.takeDamage(boss.damage);
+        }
     }
 }
-
+    
 void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);

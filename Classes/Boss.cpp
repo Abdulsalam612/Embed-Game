@@ -1,4 +1,5 @@
 #include "Boss.h"
+#include "boss1.h"
 
 Boss::Boss(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage)
     : lcd(lcd), x_pos(initialX), y_pos(initialY), hp(initialHp), damage(initialDamage),
@@ -20,7 +21,7 @@ int Boss::getHp() const {
 
 void Boss::draw() {
     if (!dead) {
-        lcd->drawRect(x_pos, y_pos, width, height, FILL_BLACK);
+        lcd->drawSprite(x_pos, y_pos, boss1_width, boss1_height, (int *)boss1);
     }
 }
 
