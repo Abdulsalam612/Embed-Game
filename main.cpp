@@ -24,11 +24,14 @@ int main() {
 
     MainMenu mainMenu(lcd, joystick1, button1);
     mainMenu.display();
-    while (!mainMenu.isStartSelected()) {
-        ThisThread::sleep_for(100ms);
+    while (true) {
+        if (mainMenu.isStartSelected()) {
+            GameEngine game(lcd, joystick1, joystick2, button1, button2);
+            game.run();
+            mainMenu.display(); // Display the main menu again after the game en        } else {
+            break; // Quit the game if "Quit" is selected
+        }
     }
 
-    GameEngine game(lcd, joystick1, joystick2, button1, button2);
-    game.run(); 
     return 0;
 }

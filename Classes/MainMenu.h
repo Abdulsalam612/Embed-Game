@@ -1,4 +1,3 @@
-// MainMenu.h
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
@@ -11,6 +10,8 @@ public:
     MainMenu(N5110& lcd, Joystick& joystick, DigitalIn& button);
     void display();
     bool isStartSelected();
+    void handleOptions();
+    void handleAbout();
 
 private:
     N5110& lcd;
