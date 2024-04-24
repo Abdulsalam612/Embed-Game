@@ -18,7 +18,7 @@
 class GameEngine {
 public:
     GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2);
-    void run();
+    bool run();
 
 private:
     void init();
@@ -26,6 +26,7 @@ private:
     void handleProjectiles();
     void handleEnemyCollision();
     void printEnemyHp();
+    void showVictoryScreen();
 
     // Hardware components
     N5110& lcd;

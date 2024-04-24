@@ -26,7 +26,7 @@ void GameEngine::init() {
     button1.mode(PullUp);
 }
 
-void GameEngine::run() {
+bool GameEngine::run() {
     init();
     currentLevel.load();
     while (true) {
@@ -42,6 +42,9 @@ void GameEngine::run() {
         if (!Enemy.isDead()) {
             Enemy.update();
             Enemy.draw();
+        } else {
+            showVictoryScreen();
+            return true;
         }
         character.applyGravity();
         character.jump(button1 == 0);
@@ -54,52 +57,21 @@ void GameEngine::run() {
             lcd.clear();
             lcd.printString("Game Over", 0, 0);
             lcd.refresh();
-            break;
-        }
-        if (Enemy.isDead()) {
-            lcd.clear();
-            lcd.printString("Level Complete", 0, 0);
-            lcd.refresh();
-            break;
+            ThisThread::sleep_for(2s);
+            return false;
         }
     }
+    return false; // Add a default return statement
 }
-//     void GameEngine::startGame() {
-//     currentLevel.load();
-//     while (true) {
-//         currentLevel.update();
-//         refreshDisplay();
-//         character.updatePosition(joystick1);
-//         if (button2 == 1) {
-//             character.updateShootingDirection(joystick2, projectiles);
-//         }
-//         printEnemyHp();
-//         handleProjectiles();
-//         handleEnemyCollision();
-//         if (!Enemy.isDead()) {
-//             Enemy.update();
-//             Enemy.draw();
-//         }
-//         character.applyGravity();
-//         character.jump(button1 == 0);
-//         character.boundaryCheck();
-//         lcd.refresh();
-//         ThisThread::sleep_for(30ms);
 
-//         currentLevel.update();        // ...
-//         if (character.isDead()) {
-//             lcd.clear();
-//             lcd.printString("Game Over", 0, 0);
-//             lcd.refresh();
-//             break;
-//         }
-//         if (Enemy.isDead()) {
-//             lcd.clear();            lcd.printString("Level Complete", 0, 0);
-//             lcd.refresh();
-//             break;
-//         }
-//     }
-// }
+void GameEngine::showVictoryScreen() {
+    lcd.clear();
+    lcd.printString("Victory!", 0, 0);
+    lcd.printString("Enemy Defeated", 0, 2);
+    lcd.refresh();
+    ThisThread::sleep_for(2s); // Display the victory screen for 2 seconds
+}
+
 void GameEngine::handleProjectiles() {
     for (auto& p : projectiles) {
         p.update();

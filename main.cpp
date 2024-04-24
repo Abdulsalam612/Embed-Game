@@ -22,14 +22,18 @@ int main() {
     joystick1.init();
     button1.mode(PullUp);
 
-    MainMenu mainMenu(lcd, joystick1, button1);
-    mainMenu.display();
+     MainMenu mainMenu(lcd, joystick1, button1);
+    GameEngine gameEngine(lcd, joystick1, joystick2, button1, button2);
+
     while (true) {
+        mainMenu.display();
         if (mainMenu.isStartSelected()) {
-            GameEngine game(lcd, joystick1, joystick2, button1, button2);
-            game.run();
-            mainMenu.display(); // Display the main menu again after the game en        } else {
-            break; // Quit the game if "Quit" is selected
+            bool gameResult = gameEngine.run();
+            if (!gameResult) {
+                break;  // Exit the game if the player is dead
+            }
+        } else {
+            break;  // Exit the game if the player selects "Quit"
         }
     }
 
