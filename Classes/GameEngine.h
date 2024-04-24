@@ -7,6 +7,8 @@
 #include "Bitmap.h"
 #include "Projectile.h"
 #include "Character.h"
+#include "MainMenu.h"
+#include "Level.h"
 
 #include <vector>
 
@@ -17,6 +19,7 @@ class GameEngine {
 public:
     GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2);
     void run();
+    void startGame();
 
 private:
     void init();
@@ -36,6 +39,8 @@ private:
     Character character;
     std::vector<Projectile> projectiles;
     Enemy Enemy;
+    MainMenu mainMenu;
+    Level currentLevel;
 };
 
 #endif
