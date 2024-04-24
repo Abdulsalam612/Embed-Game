@@ -8,7 +8,7 @@
 #include "idle1.h"
 #include "idle2.h"
 #include "boss.h"
-
+#include <string>
 
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
@@ -92,6 +92,9 @@ void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);
     
+    lcd.printString("HP: ", 42, 0);
+    lcd.printString(std::to_string(character.hp).c_str(), 64, 0);
+
     Direction dir = joystick1.get_direction();
     
     if (dir == E) {

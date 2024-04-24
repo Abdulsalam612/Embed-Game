@@ -2,7 +2,7 @@
 #include "mbed.h" // Include if not already included elsewhere in your project
 
 Character::Character(float initialX, float initialY, float groundLvl, int initialHp)
-: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.5), buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0), hp(initialHp) {}
+: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.9), buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0), hp(initialHp) {}
 
 void Character::updatePosition(Joystick& joystick) {
     Direction dir = joystick.get_direction();
