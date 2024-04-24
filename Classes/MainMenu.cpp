@@ -15,7 +15,7 @@ void MainMenu::display() {
         lcd.drawRect(0, 15, 70, 10, FILL_TRANSPARENT);
     } else if (selectedOption == 1) {
         lcd.drawRect(0, 24, 70, 10, FILL_TRANSPARENT);
-    } else{    }
+    }
 
     lcd.refresh();
 }

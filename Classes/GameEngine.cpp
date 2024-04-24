@@ -13,7 +13,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 34,100), Enemy(&lcd, 42, 14, 8, 1), mainMenu(lcd, joystick1, button1), currentLevel(lcd) // Example initial positions, ground level, and Enemy parameters
+      character(42, 24, 34,100), Enemy(&lcd, 42, 14, 8, 1), currentLevel(lcd) // Example initial positions, ground level, and Enemy parameters
 {
 }
 
@@ -28,13 +28,6 @@ void GameEngine::init() {
 
 void GameEngine::run() {
     init();
-    mainMenu.display();
-    while (!mainMenu.isStartSelected()) {
-        ThisThread::sleep_for(100ms);
-    }
-    startGame();
-}
-    void GameEngine::startGame() {
     currentLevel.load();
     while (true) {
         currentLevel.update();
@@ -56,7 +49,7 @@ void GameEngine::run() {
         lcd.refresh();
         ThisThread::sleep_for(30ms);
 
-        currentLevel.update();        // ...
+        currentLevel.update();
         if (character.isDead()) {
             lcd.clear();
             lcd.printString("Game Over", 0, 0);
@@ -64,12 +57,49 @@ void GameEngine::run() {
             break;
         }
         if (Enemy.isDead()) {
-            lcd.clear();            lcd.printString("Level Complete", 0, 0);
+            lcd.clear();
+            lcd.printString("Level Complete", 0, 0);
             lcd.refresh();
             break;
         }
     }
 }
+//     void GameEngine::startGame() {
+//     currentLevel.load();
+//     while (true) {
+//         currentLevel.update();
+//         refreshDisplay();
+//         character.updatePosition(joystick1);
+//         if (button2 == 1) {
+//             character.updateShootingDirection(joystick2, projectiles);
+//         }
+//         printEnemyHp();
+//         handleProjectiles();
+//         handleEnemyCollision();
+//         if (!Enemy.isDead()) {
+//             Enemy.update();
+//             Enemy.draw();
+//         }
+//         character.applyGravity();
+//         character.jump(button1 == 0);
+//         character.boundaryCheck();
+//         lcd.refresh();
+//         ThisThread::sleep_for(30ms);
+
+//         currentLevel.update();        // ...
+//         if (character.isDead()) {
+//             lcd.clear();
+//             lcd.printString("Game Over", 0, 0);
+//             lcd.refresh();
+//             break;
+//         }
+//         if (Enemy.isDead()) {
+//             lcd.clear();            lcd.printString("Level Complete", 0, 0);
+//             lcd.refresh();
+//             break;
+//         }
+//     }
+// }
 void GameEngine::handleProjectiles() {
     for (auto& p : projectiles) {
         p.update();
