@@ -27,18 +27,25 @@ int main() {
     GameEngine gameEngine(lcd, joystick1, joystick2, button1, button2);
 
     IntroAnimation introAnimation(lcd, joystick1, button1);  // Declare the introAnimation object
-    introAnimation.play();  // Play the intro animation
-
     while (true) {
-        mainMenu.display();
-        if (mainMenu.isStartSelected()) {
-            bool gameResult = gameEngine.run();
-            if (!gameResult) {
-                break;  // Exit the game if the player is dead
+        introAnimation.showPressAnyButtonScreen();  // Show the "Press any button to start" screen
+        introAnimation.playAnimation();  // Play the intro animation
+
+        while (true) {
+            mainMenu.display();
+            if (mainMenu.isStartSelected()) {
+                bool gameResult = gameEngine.run();
+                if (!gameResult) {
+                    break;  // Exit the inner loop if the player is dead
+                }
+            } else {
+                // Add a small delay to prevent the button press from being registered for the "Press any button to start" screen
+                ThisThread::sleep_for(500ms);
+                break;  // Exit the inner loop if the player selects "Quit"
             }
-        } else {
-            break;  // Exit the game if the player selects "Quit"
         }
+
+        // If the player selects "Quit", the outer loop will continue and the "Press any button to start" screen will be shown again
     }
 
     return 0;

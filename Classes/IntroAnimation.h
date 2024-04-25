@@ -10,7 +10,8 @@
 class IntroAnimation {
 public:
     IntroAnimation(N5110& lcd, Joystick& joystick, DigitalIn& button);
-    void play();
+    void showPressAnyButtonScreen();
+    void playAnimation();
 
 private:
     N5110& lcd;
