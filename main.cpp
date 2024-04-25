@@ -4,6 +4,7 @@
 #include "Joystick.h"
 #include "N5110.h"
 #include "MainMenu.h"
+#include "IntroAnimation.h"
 
 //Pin assignment format:  lcd(IO, Ser_TX, Ser_RX, MOSI, SCLK, PWM)  
 N5110 lcd(PC_7, PA_9, PB_10, PB_5, PB_3, PA_10);
@@ -24,6 +25,9 @@ int main() {
 
      MainMenu mainMenu(lcd, joystick1, button1);
     GameEngine gameEngine(lcd, joystick1, joystick2, button1, button2);
+
+    IntroAnimation introAnimation(lcd, joystick1, button1);  // Declare the introAnimation object
+    introAnimation.play();  // Play the intro animation
 
     while (true) {
         mainMenu.display();
