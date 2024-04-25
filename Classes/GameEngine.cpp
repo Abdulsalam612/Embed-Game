@@ -1,12 +1,6 @@
 #include "GameEngine.h"
 #include "Bitmap.h"
-#include "test.h"
-#include "walk1_left.h"
-#include "walk2_left.h"
-#include "walk1_right.h"
-#include "walk2_right.h"
-#include "idle1.h"
-#include "idle2.h"
+#include "walk.h"
 #include "boss.h"
 #include <string>
 

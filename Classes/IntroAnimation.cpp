@@ -1,7 +1,7 @@
 // IntroAnimation.cpp
 
 #include "IntroAnimation.h"
-#include "intro1.h"  // Add your sprite header files here
+#include "intro.h"  // Add your sprite header files here
 
 
 int animationspeed = 900;
@@ -83,7 +83,7 @@ void IntroAnimation::playAnimation() {
     lcd.clear();
     lcd.drawSprite(0, 0, 48, 84, (int *)sprite11);
     lcd.refresh();
-    ThisThread::sleep_for((chrono::milliseconds(animationspeed)));
+    ThisThread::sleep_for(2s);
 
     lcd.clear();
     lcd.drawSprite(0, 0, 48, 84, (int *)sprite12);
