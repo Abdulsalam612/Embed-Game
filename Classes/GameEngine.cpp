@@ -69,7 +69,13 @@ void GameEngine::showVictoryScreen() {
 void GameEngine::handleProjectiles() {
     for (auto& p : projectiles) {
         p.update();
-        lcd.setPixel(round(p.x), round(p.y), 1); // Example method, adjust to your LCD's API
+        
+        // Draw a 3x3 square for each projectile
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                lcd.setPixel(round(p.x) + i, round(p.y) + j, 1);
+            }
+        }
     }
 }
 
