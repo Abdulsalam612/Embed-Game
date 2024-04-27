@@ -54,46 +54,52 @@ void Character::updatePosition(Joystick& joystick) {
 void Character::updateShootingDirection(Joystick& joystick, std::vector<Projectile>& projectiles) {
     float dx = 0, dy = 0;
     Direction dir = joystick.get_direction();
-    float startX = x_pos + 2;
-    float startY = y_pos + 3.5;
+    float startX = x_pos;
+    float startY = y_pos;
 
     if (dir == N) {
         dy = -1;
-        startY = y_pos;
+        startX += 5; // Adjust the x-position to shoot from the top of the character's head
+        startY -= 1; // Adjust the y-position to shoot from above the character's head
     } else if (dir == S) {
         dy = 1;
-        startY = y_pos + 7;
+        startX += 5; // Adjust the x-position to shoot from the bottom of the character's head
+        startY += 13; // Adjust the y-position to shoot from below the character's feet
     } else if (dir == E) {
         dx = 1;
-        startX = x_pos + 4;
+        startX += 11; // Adjust the x-position to shoot from the right side of the character
+        startY += 6; // Adjust the y-position to shoot from the middle of the character's body
     } else if (dir == W) {
         dx = -1;
-        startX = x_pos;
+        startX -= 1; // Adjust the x-position to shoot from the left side of the character
+        startY += 6; // Adjust the y-position to shoot from the middle of the character's body
     } else if (dir == NE) {
         dx = 1;
         dy = -1;
-        startX = x_pos + 4;
-        startY = y_pos;
+        startX += 7; // Adjust the x-position to shoot from the top-right corner of the character
+        startY -= 1; // Adjust the y-position to shoot from above the character's head
     } else if (dir == NW) {
         dx = -1;
         dy = -1;
-        startX = x_pos;
-        startY = y_pos;
+        startX -= -3; // Adjust the x-position to shoot from the top-left corner of the character
+        startY -= 1; // Adjust the y-position to shoot from above the character's head
     } else if (dir == SE) {
         dx = 1;
         dy = 1;
-        startX = x_pos + 4;
-        startY = y_pos + 7;
+        startX += 7; // Adjust the x-position to shoot from the bottom-right corner of the character
+        startY += 13; // Adjust the y-position to shoot from below the character's feet
     } else if (dir == SW) {
         dx = -1;
         dy = 1;
-        startX = x_pos;
-        startY = y_pos + 7;
+        startX -= -3; // Adjust the x-position to shoot from the bottom-left corner of the character
+        startY += 13; // Adjust the y-position to shoot from below the character's feet
     }
 
-    if (shootingTimer.elapsed_time() >= std::chrono::milliseconds(SHOOTING_COOLDOWN)) {
-        projectiles.push_back(Projectile(startX, startY, dx, dy));
-        shootingTimer.reset();
+    if (dx != 0 || dy != 0) {
+        if (shootingTimer.elapsed_time() >= std::chrono::milliseconds(SHOOTING_COOLDOWN)) {
+            projectiles.push_back(Projectile(startX, startY, dx, dy));
+            shootingTimer.reset();
+        }
     }
 }
 

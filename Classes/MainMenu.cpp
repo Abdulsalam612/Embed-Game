@@ -40,10 +40,13 @@ bool MainMenu::isStartSelected() {
 
         if (button == 0) {
             if (selectedOption == 0) {
+                ThisThread::sleep_for(100ms);
                 return true;
             } else if (selectedOption == 1) {
+                ThisThread::sleep_for(100ms);
                 handleOptions();
             } else if (selectedOption == 2) {
+                ThisThread::sleep_for(100ms);
                 handleAbout();
             } else if (selectedOption == 3) {
                 return false;
@@ -63,7 +66,7 @@ void MainMenu::handleOptions() {
     lcd.refresh();
 
     while (true) {
-        if (button == 0) {
+        if (button == 1) {
             break;
         }
         ThisThread::sleep_for(100ms);

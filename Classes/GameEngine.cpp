@@ -67,14 +67,16 @@ void GameEngine::showVictoryScreen() {
 }
 
 void GameEngine::handleProjectiles() {
-    for (auto& p : projectiles) {
-        p.update();
+    for (auto it = projectiles.begin(); it != projectiles.end();) {
+        it->update();
         
-        // Draw a 3x3 square for each projectile
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                lcd.setPixel(round(p.x) + i, round(p.y) + j, 1);
-            }
+        // Remove the bullet if it goes out of bounds
+        if (it->x < 0 || it->x >= 84 || it->y < 0 || it->y >= 48) {
+            it = projectiles.erase(it);
+        } else {
+            // Draw a circle with a radius of 2 for each projectile
+            lcd.drawCircle(round(it->x), round(it->y), 2, FILL_TRANSPARENT);
+            ++it;
         }
     }
 }

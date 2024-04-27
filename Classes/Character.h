@@ -29,7 +29,7 @@ private:
     float groundLevel;
     float gravity;
     Timer shootingTimer;
-    const int SHOOTING_COOLDOWN = 500; // Cooldown time in milliseconds
+    const int SHOOTING_COOLDOWN = 300; // Cooldown time in milliseconds
 };
 
 #endif
