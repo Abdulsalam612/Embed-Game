@@ -2,7 +2,11 @@
 #include "mbed.h" // Include if not already included elsewhere in your project
 
 Character::Character(float initialX, float initialY, float groundLvl, int initialHp)
-: x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.7), buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0), hp(initialHp) {}
+    : x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.7),
+      buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0), hp(initialHp),
+      shootingTimer() {
+    shootingTimer.start();
+}
 
 void Character::updatePosition(Joystick& joystick) {
     Direction dir = joystick.get_direction();
@@ -87,7 +91,10 @@ void Character::updateShootingDirection(Joystick& joystick, std::vector<Projecti
         startY = y_pos + 7;
     }
 
-    projectiles.push_back(Projectile(startX, startY, dx, dy));
+    if (shootingTimer.elapsed_time() >= std::chrono::milliseconds(SHOOTING_COOLDOWN)) {
+        projectiles.push_back(Projectile(startX, startY, dx, dy));
+        shootingTimer.reset();
+    }
 }
 
 void Character::applyGravity() {
