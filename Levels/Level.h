@@ -9,12 +9,14 @@
 
 class Level {
 public:
-    Level(N5110& lcd);
+    Level(N5110& lcd, DigitalIn& button);
     void load();
     void update();
+    void showBossDialogue();
 
 private:
     N5110& lcd;
+    DigitalIn& button;
     std::vector<Enemy> enemies;
     Enemy boss;
 };

@@ -7,7 +7,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 34,100), Enemy(&lcd, 42, 14, 8, 1), currentLevel(lcd) // Example initial positions, ground level, and Enemy parameters
+      character(42, 24, 34,100), Enemy(&lcd, 42, 14, 8, 1), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
 {
 }
 
@@ -23,6 +23,7 @@ void GameEngine::init() {
 bool GameEngine::run() {
     init();
     currentLevel.load();
+    currentLevel.showBossDialogue();
     while (true) {
         currentLevel.update();
         refreshDisplay();
