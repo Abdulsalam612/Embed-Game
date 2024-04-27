@@ -23,7 +23,7 @@ Direction Joystick::get_direction(){
     if (angle < 0.0f) {
         d = CENTRE;   // check for -1.0 angle
     } else if (angle < 22.5f) {  // then keep going in 45 degree increments
-        d = W;
+        d = E;
     } else if (angle < 67.5f) {
         d = SE;
     } else if (angle < 112.5f) {
@@ -31,7 +31,7 @@ Direction Joystick::get_direction(){
     } else if (angle < 157.5f) {
         d = SW;
     } else if (angle < 202.5f) {
-        d = E;
+        d = W;
     } else if (angle < 247.5f) {
         d = NW;
     } else if (angle < 292.5f) {
@@ -39,7 +39,7 @@ Direction Joystick::get_direction(){
     } else if (angle < 337.5f) {
         d = NE;
     } else {
-        d = W;
+        d = E;
     }
     return d;
 }

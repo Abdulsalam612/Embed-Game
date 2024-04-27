@@ -29,9 +29,11 @@ bool MainMenu::isStartSelected() {
     while (true) {
         Direction dir = joystick.get_direction();
         if (dir == N && selectedOption > 0) {
+            ThisThread::sleep_for(100ms);
             selectedOption--;
             display(); // Redraw the menu with the updated selection
         } else if (dir == S && selectedOption < 3) {
+            ThisThread::sleep_for(100ms);
             selectedOption++;
             display(); // Redraw the menu with the updated selection
         }
