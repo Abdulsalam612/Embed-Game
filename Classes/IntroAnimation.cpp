@@ -4,7 +4,7 @@
 #include "intro.h"  // Add your sprite header files here
 
 
-int animationspeed = 900;
+int animationspeed = 100;
 
 IntroAnimation::IntroAnimation(N5110& lcd, Joystick& joystick, DigitalIn& button)
     : lcd(lcd), joystick(joystick), button(button) {}
@@ -83,7 +83,7 @@ void IntroAnimation::playAnimation() {
     lcd.clear();
     lcd.drawSprite(0, 0, 48, 84, (int *)sprite11);
     lcd.refresh();
-    ThisThread::sleep_for(2s);
+    ThisThread::sleep_for((chrono::milliseconds(animationspeed)));
 
     lcd.clear();
     lcd.drawSprite(0, 0, 48, 84, (int *)sprite12);
