@@ -38,7 +38,7 @@ private:
     // Game entities
     Character character;
     std::vector<Projectile> projectiles;
-    Enemy Enemy;
+    Enemy enemy;
     Level currentLevel;
 };
 

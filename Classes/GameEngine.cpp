@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "Bitmap.h"
+#include "Enemy.h"
 #include "walk.h"
 #include "boss.h"
 #include <string>
@@ -7,7 +8,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(42, 24, 34,100), Enemy(&lcd, 42, 14, 8, 1), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
+      character(42, 24, 34,100), enemy(&lcd, 42, 14, 8, 1), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
 {
 }
 
@@ -31,13 +32,9 @@ bool GameEngine::run() {
         if (button2 == 1) {
             character.updateShootingDirection(joystick2, projectiles);
         }
-        printEnemyHp();
         handleProjectiles();
         handleEnemyCollision();
-        if (!Enemy.isDead()) {
-            Enemy.update();
-            Enemy.draw();
-        } else {
+        if (currentLevel.allEnemiesDefeated()) {
             showVictoryScreen();
             return true;
         }
@@ -56,8 +53,9 @@ bool GameEngine::run() {
             return false;
         }
     }
-    return false; // Add a default return statement
+    return false;
 }
+
 
 void GameEngine::showVictoryScreen() {
     lcd.clear();
@@ -83,27 +81,33 @@ void GameEngine::handleProjectiles() {
 }
 
 void GameEngine::printEnemyHp() {
-    printf("Enemy HP: %d\n", Enemy.getHp());
+    printf("Enemy HP: %d\n", enemy.getHp());
 }
 
 void GameEngine::handleEnemyCollision() {
     for (auto& p : projectiles) {
-        if (p.x >= Enemy.x_pos && p.x <= Enemy.x_pos + boss_width && p.y >= Enemy.y_pos && p.y <= Enemy.y_pos + boss_height) {
-            Enemy.takeDamage();
-            p.x = -10; // Move the projectile off-screen
-            if (Enemy.hp <= 0) {
-                Enemy.setDead(true);
+        for (auto& e : currentLevel.getEnemies()) {
+            if (!e.isDead() && p.x >= e.x_pos && p.x <= e.x_pos + e.getWidth() && p.y >= e.y_pos && p.y <= e.y_pos + e.getHeight()) {
+                const_cast<Enemy&>(e).takeDamage();
+                p.x = -10; // Move the projectile off-screen
+                if (e.hp <= 0) {
+                    const_cast<Enemy&>(e).setDead(true);
+                }
             }
         }
     }
 
-    if (!character.isDead() && !Enemy.isDead()) {
-        // Check for collision between character and Enemy sprite
-        if (character.x_pos < Enemy.x_pos + boss_width &&
-            character.x_pos + 17 > Enemy.x_pos &&
-            character.y_pos < Enemy.y_pos + boss_height &&
-            character.y_pos + 13 > Enemy.y_pos) {
-            character.takeDamage(Enemy.damage);
+    if (!character.isDead()) {
+        for (auto& e : currentLevel.getEnemies()) {
+            if (!e.isDead()) {
+                // Check for collision between character and enemy sprite
+                if (character.x_pos < e.x_pos + e.getWidth() &&
+                    character.x_pos + 17 > e.x_pos &&
+                    character.y_pos < e.y_pos + e.getHeight() &&
+                    character.y_pos + 13 > e.y_pos) {
+                    character.takeDamage(e.damage);
+                }
+            }
         }
     }
 }
@@ -116,6 +120,10 @@ void GameEngine::refreshDisplay() {
     lcd.printString(std::to_string(character.hp).c_str(), 64, 0);
 
     Direction dir = joystick1.get_direction();
+
+    for (auto& enemy : currentLevel.getEnemies()) {
+        enemy.draw();
+    }
     
     if (dir == E) {
         if (character.currentSprite == 0) {
@@ -144,6 +152,5 @@ void GameEngine::refreshDisplay() {
             idleFrameCount = 0;
         }
     }
-    
-    Enemy.draw();
+
 }

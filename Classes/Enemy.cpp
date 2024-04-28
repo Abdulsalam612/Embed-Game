@@ -19,7 +19,7 @@ int Enemy::getHp() const {
     return hp;
 }
 
-void Enemy::draw() {
+void Enemy::draw() const {
     if (!dead) {
         lcd->drawSprite(x_pos, y_pos, boss_width, boss_height, (int *)boss);
     }
@@ -29,7 +29,7 @@ void Enemy::takeDamage() {
     hp--;
 }
 
-bool Enemy::isDead() {
+bool Enemy::isDead() const {
     return dead;
 }
 

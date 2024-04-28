@@ -6,11 +6,12 @@ Level::Level(N5110& lcd, DigitalIn& button)
 
 void Level::load() {
     enemies.clear();
-    // Spawn regular enemies
-    enemies.emplace_back(&lcd, 10, 24, 5, 1);
-    enemies.emplace_back(&lcd, 30, 24, 5, 1);
-    enemies.emplace_back(&lcd, 50, 24, 5, 1);
-    enemies.emplace_back(&lcd, 70, 24, 5, 1);
+    // Spawn regular enemies at random positions
+    for (int i = 0; i < 3; i++) {
+        float x = rand() % 74 + 5;  // Random x position between 5 and 78
+        float y = rand() % 38 + 5;  // Random y position between 5 and 42
+        enemies.emplace_back(&lcd, x, y, 4, 1);
+    }
 }
 
 void Level::update() {
@@ -25,6 +26,15 @@ void Level::update() {
         boss.update();
         boss.draw();
     }
+}
+
+bool Level::allEnemiesDefeated() {
+    for (const auto& enemy : enemies) {
+        if (!enemy.isDead()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void Level::showBossDialogue() {

@@ -13,6 +13,8 @@ public:
     void load();
     void update();
     void showBossDialogue();
+    bool allEnemiesDefeated();
+    const std::vector<Enemy>& getEnemies() const { return enemies; }
 
 private:
     N5110& lcd;

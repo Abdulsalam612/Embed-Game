@@ -8,10 +8,15 @@ class Enemy {
 public:
     Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage);
     void update();
-    void draw();
+    void draw() const;
     void takeDamage();
-    bool isDead();
+    bool isDead() const;
     void setDead(bool value);
+    // ...
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
+    
+    
 
     float x_pos, y_pos;
     int hp;
@@ -22,8 +27,8 @@ private:
     N5110* lcd;
     int width;
     int height;
-    int direction;
     bool dead;
+    int direction;
 };
 
 #endif
