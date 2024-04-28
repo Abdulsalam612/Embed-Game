@@ -2,7 +2,7 @@
 #include "mbed.h" // Include if not already included elsewhere in your project
 
 Character::Character(float initialX, float initialY, float groundLvl, int initialHp)
-    : x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.7),
+    : x_pos(initialX), y_pos(initialY), groundLevel(groundLvl), velocity_y(0), gravity(0.6),
       buttonReleased(true), currentSprite(0), frameCount(0), idleFrame(0), hp(initialHp),
       shootingTimer() {
     shootingTimer.start();
@@ -115,7 +115,7 @@ void Character::applyGravity() {
 
 void Character::jump(bool buttonPressed) {
     if (buttonPressed && buttonReleased) {
-        velocity_y = -5;
+        velocity_y = -4.5;
         buttonReleased = false;
     } else if (!buttonPressed) {
         buttonReleased = true;

@@ -8,7 +8,7 @@ struct Projectile {
 
     // Initialize a projectile with position and direction
     Projectile(float posX, float posY, float dirX, float dirY)
-        : x(posX), y(posY), dx(dirX * 1.5), dy(dirY * 1.5) {} // Increase the speed by multiplying dx and dy by a factor (e.g., 3)
+        : x(posX), y(posY), dx(dirX * 1.3), dy(dirY * 1.3) {} // Increase the speed by multiplying dx and dy by a factor (e.g., 3)
 
     // Update the position of the projectile
     void update() {

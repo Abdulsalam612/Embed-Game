@@ -13,8 +13,8 @@ GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, Dig
 
 void GameEngine::init() {
     lcd.init(LPH7366_1);
-    lcd.setContrast(0.6);
-    lcd.setBrightness(0.6);
+    lcd.setContrast(0.5);
+    lcd.setBrightness(0.2);
     joystick1.init();
     joystick2.init();
     button1.mode(PullUp);
@@ -76,7 +76,7 @@ void GameEngine::handleProjectiles() {
             it = projectiles.erase(it);
         } else {
             // Draw a circle with a radius of 2 for each projectile
-            lcd.drawCircle(round(it->x), round(it->y), 2, FILL_TRANSPARENT);
+            lcd.drawCircle(round(it->x), round(it->y), 1, FILL_BLACK);
             ++it;
         }
     }

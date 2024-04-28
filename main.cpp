@@ -18,12 +18,14 @@ DigitalIn button2(PA_8);
 
 int main() {
     lcd.init(LPH7366_1);
-    lcd.setContrast(0.6);
+    lcd.setContrast(0.4);
     lcd.setBrightness(0.6);
+
     joystick1.init();
     button1.mode(PullUp);
+    button2.mode(PullDown);
 
-     MainMenu mainMenu(lcd, joystick1, button1);
+    MainMenu mainMenu(lcd, joystick1, button1);
     GameEngine gameEngine(lcd, joystick1, joystick2, button1, button2);
 
     IntroAnimation introAnimation(lcd, joystick1, button1);  // Declare the introAnimation object
