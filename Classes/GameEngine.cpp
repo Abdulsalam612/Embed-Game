@@ -111,11 +111,17 @@ void GameEngine::handleEnemyCollision() {
     if (!character.isDead()) {
         for (auto& e : currentLevel.getEnemies()) {
             if (!e.isDead()) {
-                // Check for collision between character and enemy sprite
-                if (character.x_pos < e.x_pos + e.getWidth() &&
-                    character.x_pos + 17 > e.x_pos &&
-                    character.y_pos < e.y_pos + e.getHeight() &&
-                    character.y_pos + 13 > e.y_pos) {
+                // Adjust the hit box of the character
+                int characterLeft = character.x_pos + 4;
+                int characterRight = character.x_pos + 13;
+                int characterTop = character.y_pos + 6;
+                int characterBottom = character.y_pos + 10;
+
+                // Check for collision between character's hit box and enemy sprite
+                if (characterLeft < e.x_pos + e.getWidth() &&
+                    characterRight > e.x_pos &&
+                    characterTop < e.y_pos + e.getHeight() &&
+                    characterBottom > e.y_pos) {
                     character.takeDamage(e.damage);
                 }
             }
@@ -127,8 +133,8 @@ void GameEngine::refreshDisplay() {
     lcd.clear();
     lcd.drawRect(0, 0, 84, 48, FILL_TRANSPARENT);
     
-    lcd.printString("HP: ", 42, 0);
-    lcd.printString(std::to_string(character.hp).c_str(), 64, 0);
+    lcd.printString("HP: ", 5, 0);
+    lcd.printString(std::to_string(character.hp).c_str(), 21, 0);
 
     Direction dir = joystick1.get_direction();
 
