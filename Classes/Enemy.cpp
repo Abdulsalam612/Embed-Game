@@ -1,9 +1,9 @@
 #include "Enemy.h"
 #include "boss.h"
 
-Enemy::Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage)
+Enemy::Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage, float initialSpeed)
     : lcd(lcd), x_pos(initialX), y_pos(initialY), hp(initialHp), damage(initialDamage),
-      width(10), height(10), dead(false) {
+      width(10), height(10), dead(false), speed(initialSpeed) {
     // Assign random initial directions to each enemy
     direction_x = (rand() % 2 == 0) ? 1 : -1;
     direction_y = (rand() % 2 == 0) ? 1 : -1;
@@ -37,11 +37,12 @@ void Enemy::draw() const {
 void Enemy::takeDamage() {
     hp--;
     // Indicate that the enemy is hit (e.g., by changing color or displaying an effect)
-    lcd->setPixel(x_pos + width / 2, y_pos + height / 2, 1);
-    lcd->refresh();
-    ThisThread::sleep_for(100ms);
-    lcd->setPixel(x_pos + width / 2, y_pos + height / 2, 0);
-    lcd->refresh();
+    // lcd->setPixel(x_pos + width / 2, y_pos + height / 2, 1);
+    // lcd->refresh();
+    // ThisThread::sleep_for(100ms);
+    // lcd->setPixel(x_pos + width / 2, y_pos + height / 2, 0);
+    // lcd->refresh();
+    
 }
 
 bool Enemy::isDead() const {

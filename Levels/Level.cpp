@@ -2,12 +2,23 @@
 #include "Level.h"
 
 Level::Level(N5110& lcd, DigitalIn& button)
-    : lcd(lcd), button(button), boss(&lcd, 42, 0, 20, 2), wave(1) {}
+    : lcd(lcd), button(button), boss(&lcd, 42, 0, 20, 2,1.0f), wave(1) {}
 
 void Level::load(float characterX, float characterY) {
     enemies.clear();
     // Spawn regular enemies at random positions
-    int numEnemies = (wave == 1) ? 3 : 5;
+    int numEnemies;
+    float enemySpeed;
+    if (wave == 1) {
+        numEnemies = 3;
+        enemySpeed = 1.0f;
+    } else if (wave == 2) {
+        numEnemies = 5;
+        enemySpeed = 1.0f;
+    } else {
+        numEnemies = 8;
+        enemySpeed = 1.5f;
+    }
     for (int i = 0; i < numEnemies; i++) {
         float x, y;
         bool validPosition = false;
@@ -24,15 +35,34 @@ void Level::load(float characterX, float characterY) {
                 validPosition = true;
             }
         }
-        enemies.emplace_back(&lcd, x, y, 4, 1);
+        enemies.emplace_back(&lcd, x, y, 4, 1, enemySpeed);
     }
 }
+
+
 
 void Level::showSecondWaveDialogue() {
     lcd.clear();
     lcd.printString("Get prepared", 0, 0);
     lcd.printString("for the", 0, 1);
     lcd.printString("second wave!", 0, 2);
+    lcd.refresh();
+
+    while (button == 1) {
+        ThisThread::sleep_for(100ms);
+    }
+    while (button == 0) {
+        ThisThread::sleep_for(100ms);
+    }
+}
+
+void Level::showThirdWaveDialogue() {
+    lcd.clear();
+    lcd.printString("Brace yourself", 0, 0);
+    lcd.printString("for the", 0, 1);
+    lcd.printString("third wave!", 0, 2);
+    lcd.printString("Enemies are", 0, 3);
+    lcd.printString("faster now!", 0, 4);
     lcd.refresh();
 
     while (button == 1) {

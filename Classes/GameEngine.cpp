@@ -8,7 +8,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(12, 24, 34,100), enemy(&lcd, 42, 14, 8, 1), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
+      character(12, 24, 34,100), enemy(&lcd, 42, 14, 8, 1, 1.0f), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
 {
 }
 
@@ -51,6 +51,14 @@ bool GameEngine::run() {
                 currentLevel.nextWave();
                 
                 // Delay for 1 second before spawning the second wave
+                ThisThread::sleep_for(1s);
+                
+                currentLevel.load(character.x_pos, character.y_pos);
+            } else if (currentLevel.getWave() == 2) {
+                currentLevel.showThirdWaveDialogue();
+                currentLevel.nextWave();
+                
+                // Delay for 1 second before spawning the third wave
                 ThisThread::sleep_for(1s);
                 
                 currentLevel.load(character.x_pos, character.y_pos);
