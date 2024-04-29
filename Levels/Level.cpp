@@ -12,6 +12,7 @@ void Level::load() {
         float y = rand() % 38 + 5;  // Random y position between 5 and 42
         enemies.emplace_back(&lcd, x, y, 4, 1);
     }
+
 }
 
 void Level::update() {

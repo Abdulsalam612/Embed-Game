@@ -23,12 +23,16 @@ public:
     int damage;
     int getHp() const;
 
+    
+
 private:
     N5110* lcd;
     int width;
     int height;
     bool dead;
-    int direction;
+    float direction_x;
+    float direction_y;
+    float speed;
 };
 
 #endif
