@@ -10,7 +10,7 @@
 class Level {
 public:
     Level(N5110& lcd, DigitalIn& button);
-    void load();
+    void load(float characterX, float characterY);
     void update();
     void showBossDialogue();
     bool allEnemiesDefeated();

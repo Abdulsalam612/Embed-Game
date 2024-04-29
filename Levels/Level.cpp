@@ -4,13 +4,26 @@
 Level::Level(N5110& lcd, DigitalIn& button)
     : lcd(lcd), button(button), boss(&lcd, 42, 0, 20, 2), wave(1) {}
 
-void Level::load() {
+void Level::load(float characterX, float characterY) {
     enemies.clear();
     // Spawn regular enemies at random positions
-    int numEnemies = (wave == 1) ? 3 : 7;
+    int numEnemies = (wave == 1) ? 3 : 5;
     for (int i = 0; i < numEnemies; i++) {
-        float x = rand() % 74 + 5;  // Random x position between 5 and 78
-        float y = rand() % 38 + 5;  // Random y position between 5 and 42
+        float x, y;
+        bool validPosition = false;
+        while (!validPosition) {
+            if (wave == 1) {
+                x = rand() % 74 + 5;  // Random x position between 5 and 78
+                y = rand() % 38 + 5;  // Random y position between 5 and 42
+            } else {
+                x = rand() % 74 + 5;  // Random x position between 5 and 78
+                y = rand() % 10 + 5;  // Random y position between 5 and 14 (top area)
+            }
+            // Check if the position is far enough from the character
+            if (abs(x - characterX) > 20 || abs(y - characterY) > 20) {
+                validPosition = true;
+            }
+        }
         enemies.emplace_back(&lcd, x, y, 4, 1);
     }
 }

@@ -34,7 +34,7 @@ bool GameEngine::run() {
     ThisThread::sleep_for(1s);
     
     // Load the level (spawn the enemies)
-    currentLevel.load();
+    currentLevel.load(character.x_pos, character.y_pos);
     
     while (true) {
         currentLevel.update();
@@ -49,7 +49,11 @@ bool GameEngine::run() {
             if (currentLevel.getWave() == 1) {
                 currentLevel.showSecondWaveDialogue();
                 currentLevel.nextWave();
-                currentLevel.load();
+                
+                // Delay for 1 second before spawning the second wave
+                ThisThread::sleep_for(1s);
+                
+                currentLevel.load(character.x_pos, character.y_pos);
             } else {
                 showVictoryScreen();
                 return true;
