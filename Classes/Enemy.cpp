@@ -3,7 +3,12 @@
 
 Enemy::Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage)
     : lcd(lcd), x_pos(initialX), y_pos(initialY), hp(initialHp), damage(initialDamage),
-      width(10), height(10), direction_x(1), direction_y(1), speed(0.5), dead(false) {}
+      width(10), height(10), dead(false) {
+    // Assign random initial directions to each enemy
+    direction_x = (rand() % 2 == 0) ? 1 : -1;
+    direction_y = (rand() % 2 == 0) ? 1 : -1;
+    speed = (rand() % 3 + 2) / 10.0f; // Random speed between 0.2 and 0.4
+}
 
 void Enemy::update() {
     if (!dead) {
