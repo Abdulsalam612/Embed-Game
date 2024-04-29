@@ -2,17 +2,40 @@
 #include "Level.h"
 
 Level::Level(N5110& lcd, DigitalIn& button)
-    : lcd(lcd), button(button), boss(&lcd, 42, 0, 20, 2) {}
+    : lcd(lcd), button(button), boss(&lcd, 42, 0, 20, 2), wave(1) {}
 
 void Level::load() {
     enemies.clear();
     // Spawn regular enemies at random positions
-    for (int i = 0; i < 3; i++) {
+    int numEnemies = (wave == 1) ? 3 : 7;
+    for (int i = 0; i < numEnemies; i++) {
         float x = rand() % 74 + 5;  // Random x position between 5 and 78
         float y = rand() % 38 + 5;  // Random y position between 5 and 42
         enemies.emplace_back(&lcd, x, y, 4, 1);
     }
+}
 
+void Level::showSecondWaveDialogue() {
+    lcd.clear();
+    lcd.printString("Get prepared", 0, 0);
+    lcd.printString("for the", 0, 1);
+    lcd.printString("second wave!", 0, 2);
+    lcd.refresh();
+
+    while (button == 1) {
+        ThisThread::sleep_for(100ms);
+    }
+    while (button == 0) {
+        ThisThread::sleep_for(100ms);
+    }
+}
+
+void Level::nextWave() {
+    wave++;
+}
+
+int Level::getWave() const {
+    return wave;
 }
 
 void Level::update() {

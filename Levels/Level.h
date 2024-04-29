@@ -14,6 +14,9 @@ public:
     void update();
     void showBossDialogue();
     bool allEnemiesDefeated();
+    void showSecondWaveDialogue();
+    void nextWave();
+    int getWave() const;
     const std::vector<Enemy>& getEnemies() const { return enemies; }
 
 private:
@@ -21,6 +24,7 @@ private:
     DigitalIn& button;
     std::vector<Enemy> enemies;
     Enemy boss;
+    int wave;
 };
 
 #endif

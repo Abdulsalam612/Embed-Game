@@ -46,8 +46,14 @@ bool GameEngine::run() {
         handleProjectiles();
         handleEnemyCollision();
         if (currentLevel.allEnemiesDefeated()) {
-            showVictoryScreen();
-            return true;
+            if (currentLevel.getWave() == 1) {
+                currentLevel.showSecondWaveDialogue();
+                currentLevel.nextWave();
+                currentLevel.load();
+            } else {
+                showVictoryScreen();
+                return true;
+            }
         }
         character.applyGravity();
         character.jump(button1 == 0);
