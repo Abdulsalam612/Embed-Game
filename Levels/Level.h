@@ -19,6 +19,10 @@ public:
     void nextWave();
     int getWave() const;
     const std::vector<Enemy>& getEnemies() const { return enemies; }
+    void showFinalBossDialogue();
+    void spawnFinalBoss();
+    void updateFinalBoss();
+    bool isFinalBossDefeated() const;
 
 private:
     N5110& lcd;
@@ -26,6 +30,8 @@ private:
     std::vector<Enemy> enemies;
     Enemy boss;
     int wave;
+    Enemy finalBoss;
+    bool finalBossSpawned;
 };
 
 #endif

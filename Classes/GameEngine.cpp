@@ -8,7 +8,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(12, 24, 34,100), enemy(&lcd, 42, 14, 8, 1, 1.0f), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
+      character(12, 24, 34,100), enemy(&lcd, 42, 14, 1, 1, 1.0f), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
 {
 }
 
@@ -23,19 +23,17 @@ void GameEngine::init() {
 
 bool GameEngine::run() {
     init();
-    
-    currentLevel.showBossDialogue();
-    
+
     // Spawn the character
     refreshDisplay();
     lcd.refresh();
-    
-    // Delay for 3 seconds after the character spawns
+
+    // Delay for 1 second after the character spawns
     ThisThread::sleep_for(1s);
-    
+
     // Load the level (spawn the enemies)
     currentLevel.load(character.x_pos, character.y_pos);
-    
+
     while (true) {
         currentLevel.update();
         refreshDisplay();
@@ -45,35 +43,42 @@ bool GameEngine::run() {
         }
         handleProjectiles();
         handleEnemyCollision();
+
         if (currentLevel.allEnemiesDefeated()) {
-            if (currentLevel.getWave() == 1) {
-                currentLevel.showSecondWaveDialogue();
-                currentLevel.nextWave();
-                
-                // Delay for 1 second before spawning the second wave
-                ThisThread::sleep_for(1s);
-                
-                currentLevel.load(character.x_pos, character.y_pos);
-            } else if (currentLevel.getWave() == 2) {
-                currentLevel.showThirdWaveDialogue();
-                currentLevel.nextWave();
-                
-                // Delay for 1 second before spawning the third wave
-                ThisThread::sleep_for(1s);
-                
-                currentLevel.load(character.x_pos, character.y_pos);
-            } else {
-                showVictoryScreen();
-                return true;
-            }
-        }
+    if (currentLevel.getWave() == 1) {
+        currentLevel.showSecondWaveDialogue();
+        currentLevel.nextWave();
+
+        ThisThread::sleep_for(1s);
+        currentLevel.load(character.x_pos, character.y_pos);
+    } else if (currentLevel.getWave() == 2) {
+        currentLevel.showThirdWaveDialogue();
+        currentLevel.nextWave();
+
+        ThisThread::sleep_for(1s);
+        currentLevel.load(character.x_pos, character.y_pos);
+    } else if (currentLevel.getWave() == 3) {
+        currentLevel.showFinalBossDialogue();
+        currentLevel.nextWave(); // Ensure this method increments the wave count
+        currentLevel.spawnFinalBoss(); // Ensure this spawns the final boss appropriately
+    }
+}
+
+if (currentLevel.getWave() == 4) {
+    currentLevel.updateFinalBoss();
+
+    if (currentLevel.isFinalBossDefeated()) {
+        showVictoryScreen();
+        return true;
+    }
+}
+
         character.applyGravity();
         character.jump(button1 == 0);
         character.boundaryCheck();
         lcd.refresh();
         ThisThread::sleep_for(30ms);
 
-        currentLevel.update();
         if (character.isDead()) {
             lcd.clear();
             lcd.printString("Game Over", 0, 0);
@@ -82,6 +87,7 @@ bool GameEngine::run() {
             return false;
         }
     }
+
     return false;
 }
 

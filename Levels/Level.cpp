@@ -2,7 +2,8 @@
 #include "Level.h"
 
 Level::Level(N5110& lcd, DigitalIn& button)
-    : lcd(lcd), button(button), boss(&lcd, 42, 0, 20, 2,1.0f), wave(1) {}
+    : lcd(lcd), button(button), boss(&lcd, 42, 0, 1, 2, 1.0f), wave(1),
+      finalBoss(&lcd, 42, 0, 1, 2, 1.0f), finalBossSpawned(false) {}
 
 void Level::load(float characterX, float characterY) {
     enemies.clear();
@@ -35,7 +36,7 @@ void Level::load(float characterX, float characterY) {
                 validPosition = true;
             }
         }
-        enemies.emplace_back(&lcd, x, y, 4, 1, enemySpeed);
+        enemies.emplace_back(&lcd, x, y, 1, 1, enemySpeed);
     }
 }
 
@@ -71,6 +72,63 @@ void Level::showThirdWaveDialogue() {
     while (button == 0) {
         ThisThread::sleep_for(100ms);
     }
+}
+
+void Level::showFinalBossDialogue() {
+    lcd.clear();
+    lcd.printString("Final Boss:", 0, 0);
+    lcd.printString("You've made it", 0, 1);
+    lcd.printString("this far, but", 0, 2);
+    lcd.printString("can you defeat", 0, 3);
+    lcd.printString("me?", 0, 4);
+    lcd.refresh();
+
+    // Wait for the button to be released
+    while (button == 0) {
+        ThisThread::sleep_for(100ms);
+    }
+
+    // Wait for the button to be pressed
+    while (button == 1) {
+        ThisThread::sleep_for(100ms);
+    }
+
+    // Wait for the button to be released again
+    while (button == 0) {
+        ThisThread::sleep_for(100ms);
+    }
+}
+
+void Level::spawnFinalBoss() {
+    finalBoss = Enemy(&lcd, 42, 0, 20, 2, 1.0f);
+    finalBossSpawned = true;
+}
+
+void Level::updateFinalBoss() {
+    if (finalBossSpawned && !finalBoss.isDead()) {
+        // Update final boss movement using sine wave pattern
+        static float t = 0.0f;
+        t += 0.05f;
+        finalBoss.x_pos = 42 + 20 * sin(t);
+        finalBoss.y_pos = 10 + 5 * cos(t * 0.7f);
+
+        // Shoot bullets from the final boss
+        static int bulletTimer = 0;
+        bulletTimer++;
+        if (bulletTimer >= 50) {
+            // Shoot bullets from the left side of the boss
+            enemies.emplace_back(&lcd, finalBoss.x_pos - 5, finalBoss.y_pos + 5, 1, 1, 2.0f);
+            // Shoot bullets from the right side of the boss
+            enemies.emplace_back(&lcd, finalBoss.x_pos + 15, finalBoss.y_pos + 5, 1, 1, 2.0f);
+            bulletTimer = 0;
+        }
+
+        finalBoss.draw();
+    }
+}
+
+bool Level::isFinalBossDefeated() const {
+    return finalBossSpawned && finalBoss.isDead();
 }
 
 void Level::nextWave() {
