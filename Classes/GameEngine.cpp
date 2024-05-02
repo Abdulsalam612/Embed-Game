@@ -8,7 +8,7 @@
 
 GameEngine::GameEngine(N5110& lcd, Joystick& joystick1, Joystick& joystick2, DigitalIn& button1, DigitalIn& button2)
     : lcd(lcd),  joystick1(joystick1), joystick2(joystick2), button1(button1), button2(button2),
-      character(12, 24, 34,100), enemy(&lcd, 42, 14, 1, 1, 1.0f), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
+      character(12, 24, 34,100), enemy(&lcd, 42, 14, 1, 1, 1.0f, 0.0f, 0.0f), currentLevel(lcd, button1) // Example initial positions, ground level, and Enemy parameters
 {
 }
 

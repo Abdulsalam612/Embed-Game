@@ -23,6 +23,7 @@ public:
     void spawnFinalBoss();
     void updateFinalBoss();
     bool isFinalBossDefeated() const;
+    void setCharacterPosition(float x, float y);
 
 private:
     N5110& lcd;
@@ -32,6 +33,8 @@ private:
     int wave;
     Enemy finalBoss;
     bool finalBossSpawned;
+    float characterX;
+    float characterY;
 };
 
 #endif

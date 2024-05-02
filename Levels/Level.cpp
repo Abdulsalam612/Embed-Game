@@ -1,9 +1,10 @@
 // Level.cpp
 #include "Level.h"
+#include "FinalBoss.h"
 
 Level::Level(N5110& lcd, DigitalIn& button)
-    : lcd(lcd), button(button), boss(&lcd, 42, 0, 1, 2, 1.0f), wave(1),
-      finalBoss(&lcd, 42, 0, 1, 2, 1.0f), finalBossSpawned(false) {}
+    : lcd(lcd), button(button), boss(&lcd, 42, 0, 1, 2, 1.0f, 0.0f, 0.0f), wave(1),
+      finalBoss(&lcd, 42, 0, 1, 2, 1.0f, 0.0f, 0.0f), finalBossSpawned(false) {}
 
 void Level::load(float characterX, float characterY) {
     enemies.clear();
@@ -36,7 +37,7 @@ void Level::load(float characterX, float characterY) {
                 validPosition = true;
             }
         }
-        enemies.emplace_back(&lcd, x, y, 1, 1, enemySpeed);
+        enemies.emplace_back(&lcd, x, y, 1, 1, enemySpeed, 0.0f, 0.0f);
     }
 }
 
@@ -100,8 +101,13 @@ void Level::showFinalBossDialogue() {
 }
 
 void Level::spawnFinalBoss() {
-    finalBoss = Enemy(&lcd, 42, 0, 20, 2, 1.0f);
+    finalBoss = Enemy(&lcd, 42, 0, 20, 2, 1.0f, 0.0f, 0.0f);
     finalBossSpawned = true;
+}
+
+void Level::setCharacterPosition(float x, float y) {
+    characterX = x;
+    characterY = y;
 }
 
 void Level::updateFinalBoss() {
@@ -110,20 +116,27 @@ void Level::updateFinalBoss() {
         static float t = 0.0f;
         t += 0.05f;
         finalBoss.x_pos = 42 + 20 * sin(t);
-        finalBoss.y_pos = 10 + 5 * cos(t * 0.7f);
+        finalBoss.y_pos = 24 + 20 * cos(t * 0.7f);
 
-        // Shoot bullets from the final boss
+        // Shoot bullets from the final boss towards the character
         static int bulletTimer = 0;
         bulletTimer++;
         if (bulletTimer >= 50) {
+            // Calculate the direction vector from the final boss to the character
+            float dx = characterX - finalBoss.x_pos;
+            float dy = characterY - finalBoss.y_pos;
+            float magnitude = sqrt(dx * dx + dy * dy);
+            dx /= magnitude;
+            dy /= magnitude;
+
             // Shoot bullets from the left side of the boss
-            enemies.emplace_back(&lcd, finalBoss.x_pos - 5, finalBoss.y_pos + 5, 1, 1, 2.0f);
+            enemies.emplace_back(&lcd, finalBoss.x_pos - 5, finalBoss.y_pos + 5, 1, 1, 2.0f, dx, dy);
             // Shoot bullets from the right side of the boss
-            enemies.emplace_back(&lcd, finalBoss.x_pos + 15, finalBoss.y_pos + 5, 1, 1, 2.0f);
+            enemies.emplace_back(&lcd, finalBoss.x_pos + 24, finalBoss.y_pos + 5, 1, 1, 2.0f, dx, dy);
             bulletTimer = 0;
         }
 
-        finalBoss.draw();
+        lcd.drawSprite(finalBoss.x_pos, finalBoss.y_pos, FinalBoss_width, FinalBoss_height, (int *)FinalBoss);
     }
 }
 

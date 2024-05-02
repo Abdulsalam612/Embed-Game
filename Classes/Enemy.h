@@ -6,7 +6,7 @@
 
 class Enemy {
 public:
-    Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage, float initialSpeed);
+    Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage, float initialSpeed, float dx, float dy);
     void update();
     void draw() const;
     void takeDamage();

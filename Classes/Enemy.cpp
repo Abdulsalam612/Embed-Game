@@ -1,9 +1,9 @@
 #include "Enemy.h"
 #include "boss.h"
 
-Enemy::Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage, float initialSpeed)
+Enemy::Enemy(N5110* lcd, float initialX, float initialY, int initialHp, int initialDamage, float initialSpeed, float dx, float dy)
     : lcd(lcd), x_pos(initialX), y_pos(initialY), hp(initialHp), damage(initialDamage),
-      width(10), height(10), dead(false), speed(initialSpeed) {
+      width(10), height(10), dead(false), speed(initialSpeed), direction_x(dx), direction_y(dy) {
     // Assign random initial directions to each enemy
     direction_x = (rand() % 2 == 0) ? 1 : -1;
     direction_y = (rand() % 2 == 0) ? 1 : -1;
