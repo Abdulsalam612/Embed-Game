@@ -105,7 +105,7 @@ void GameEngine::handleProjectiles() {
         it->update();
         
         // Remove the bullet if it goes out of bounds
-        if (it->x < 0 || it->x >= 84 || it->y < 0 || it->y >= 48) {
+        if (it->x < 4 || it->x >= 82 || it->y < 4 || it->y >= 46) {
             it = projectiles.erase(it);
         } else {
             // Draw a circle with a radius of 2 for each projectile
