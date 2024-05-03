@@ -24,6 +24,7 @@ public:
     void updateFinalBoss();
     bool isFinalBossDefeated() const;
     void setCharacterPosition(float x, float y);
+    Enemy& getFinalBoss() { return finalBoss; }
 
 private:
     N5110& lcd;

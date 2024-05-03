@@ -4,7 +4,7 @@
 #include "intro.h"  // Add your sprite header files here
 
 
-int animationspeed = 100;
+int animationspeed = 1000;
 
 IntroAnimation::IntroAnimation(N5110& lcd, Joystick& joystick, DigitalIn& button)
     : lcd(lcd), joystick(joystick), button(button) {}

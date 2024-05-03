@@ -1,6 +1,7 @@
 // Level.cpp
 #include "Level.h"
 #include "FinalBoss.h"
+#include "Dialogue.h"
 
 Level::Level(N5110& lcd, DigitalIn& button)
     : lcd(lcd), button(button), boss(&lcd, 42, 0, 1, 2, 1.0f, 0.0f, 0.0f), wave(1),
@@ -75,14 +76,66 @@ void Level::showThirdWaveDialogue() {
     }
 }
 
+int animspeed = 700;
+
 void Level::showFinalBossDialogue() {
     lcd.clear();
-    lcd.printString("Final Boss:", 0, 0);
-    lcd.printString("You've made it", 0, 1);
-    lcd.printString("this far, but", 0, 2);
-    lcd.printString("can you defeat", 0, 3);
-    lcd.printString("me?", 0, 4);
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite0);
     lcd.refresh();
+    ThisThread::sleep_for((chrono::milliseconds(animspeed)));
+
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite1);
+    lcd.refresh();
+    ThisThread::sleep_for((chrono::milliseconds(animspeed)));
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite2);
+    lcd.refresh();
+    ThisThread::sleep_for((chrono::milliseconds(animspeed)));
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite3);
+    lcd.refresh();
+    ThisThread::sleep_for((chrono::milliseconds(animspeed)));
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite4);
+    lcd.refresh();
+    ThisThread::sleep_for(2s);
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite5);
+    lcd.refresh();
+    ThisThread::sleep_for(2s);
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite6);
+    lcd.refresh();
+    ThisThread::sleep_for(2s);
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite7);
+    lcd.refresh();
+    ThisThread::sleep_for(700ms);
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite8);
+    lcd.refresh();
+    ThisThread::sleep_for(700ms);
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite9);
+    lcd.refresh();
+    ThisThread::sleep_for(700ms);
+
+    lcd.clear();
+    lcd.drawSprite(0, 0, 48, 84, (int *)sprite10);
+    lcd.refresh();
+    ThisThread::sleep_for(700ms);
+
+      lcd.refresh();
 
     // Wait for the button to be released
     while (button == 0) {
@@ -98,6 +151,7 @@ void Level::showFinalBossDialogue() {
     while (button == 0) {
         ThisThread::sleep_for(100ms);
     }
+
 }
 
 void Level::spawnFinalBoss() {

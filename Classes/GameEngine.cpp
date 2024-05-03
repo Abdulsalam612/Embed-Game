@@ -65,13 +65,14 @@ bool GameEngine::run() {
 }
 
 if (currentLevel.getWave() == 4) {
-    currentLevel.updateFinalBoss();
+        currentLevel.setCharacterPosition(character.x_pos, character.y_pos);
+        currentLevel.updateFinalBoss();
 
-    if (currentLevel.isFinalBossDefeated()) {
-        showVictoryScreen();
-        return true;
+        if (currentLevel.isFinalBossDefeated()) {
+            showVictoryScreen();
+            return true;
+        }
     }
-}
 
         character.applyGravity();
         character.jump(button1 == 0);
@@ -132,6 +133,20 @@ void GameEngine::handleEnemyCollision() {
         }
     }
 
+    // Check collision between projectiles and the final boss
+    if (currentLevel.getWave() == 4 && !currentLevel.isFinalBossDefeated()) {
+        for (auto& p : projectiles) {
+            if (p.x >= currentLevel.getFinalBoss().x_pos && p.x <= currentLevel.getFinalBoss().x_pos + currentLevel.getFinalBoss().getWidth() &&
+                p.y >= currentLevel.getFinalBoss().y_pos && p.y <= currentLevel.getFinalBoss().y_pos + currentLevel.getFinalBoss().getHeight()) {
+                currentLevel.getFinalBoss().takeDamage();
+                p.x = -10; // Move the projectile off-screen
+                if (currentLevel.getFinalBoss().getHp() <= 0) {
+                    currentLevel.getFinalBoss().setDead(true);
+                }
+            }
+        }
+    }
+
     if (!character.isDead()) {
         for (auto& e : currentLevel.getEnemies()) {
             if (!e.isDead()) {
@@ -147,6 +162,26 @@ void GameEngine::handleEnemyCollision() {
                     characterTop < e.y_pos + e.getHeight() &&
                     characterBottom > e.y_pos) {
                     character.takeDamage(e.damage);
+                }
+            }
+        }
+
+        // Check collision between character and the final boss
+        if (currentLevel.getWave() == 4 && !currentLevel.isFinalBossDefeated()) {
+            Enemy& finalBoss = currentLevel.getFinalBoss();
+            if (!finalBoss.isDead()) {
+                // Adjust the hit box of the character
+                int characterLeft = character.x_pos + 4;
+                int characterRight = character.x_pos + 13;
+                int characterTop = character.y_pos + 6;
+                int characterBottom = character.y_pos + 10;
+
+                // Check for collision between character's hit box and final boss sprite
+                if (characterLeft < finalBoss.x_pos + finalBoss.getWidth() &&
+                    characterRight > finalBoss.x_pos &&
+                    characterTop < finalBoss.y_pos + finalBoss.getHeight() &&
+                    characterBottom > finalBoss.y_pos) {
+                    character.takeDamage(finalBoss.damage);
                 }
             }
         }
